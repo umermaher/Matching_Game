@@ -24,7 +24,8 @@
         android:imeOptions="actionDone"
         android:maxLines="1"
         android:importantForAutofill="no"
-        android:layout_margin="20dp"
+        android:layout_marginHorizontal="20sp"
+        android:layout_marginBottom="10sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/saveBtn"
@@ -34,21 +35,24 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/saveBtn"
-        android:layout_margin="20dp"
+        android:layout_marginHorizontal="20sp"
+        android:layout_marginBottom="10sp"
         android:text="Save"
         android:enabled="false"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/linearProgressBar"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 
     <ProgressBar
-        android:id="@+id/createProgressBar"
-        android:layout_width="wrap_content"
+        android:id="@+id/linearProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:indeterminateTint="@color/theme"/>
+        android:layout_margin="20sp"
+        android:progressTint="@color/theme"
+        android:visibility="gone"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

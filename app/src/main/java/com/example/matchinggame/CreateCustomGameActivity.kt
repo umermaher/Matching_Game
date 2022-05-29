@@ -3,6 +3,7 @@ package com.example.matchinggame
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -29,10 +30,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.matchinggame.models.BoardSize
 import com.example.matchinggame.utils.BitmapScaler
 import com.example.matchinggame.utils.EXTRA_BOARD_SIZE
+import com.example.matchinggame.utils.EXTRA_GAME_NAME
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.activity_create_custom_game.*
+import kotlinx.coroutines.delay
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
@@ -145,10 +148,25 @@ class CreateCustomGameActivity : AppCompatActivity() {
     @SuppressLint("LongLogTag")
     private fun saveDataToFirebase() {
         val customGameName=nameEditText.text.toString()
-        var didEncounterError=false
-        val uploadedImageUris= mutableListOf<String>()
-        createProgressBar.visibility= View.VISIBLE
+        saveBtn.isEnabled=false
+        //checking that we're not creating game with existing game name
+        db.collection("games").document(customGameName).get().addOnSuccessListener{
+            if(it!=null && it.data!=null){
+                showAlertDialog("Name taken","A game already exist with the name '$customGameName' please choose another.",null)
+                saveBtn.isEnabled=true
+            }else{
+                handleImageUploading(customGameName)
+            }
+        }
+    }
 
+    @SuppressLint("LongLogTag")
+    private fun handleImageUploading(customGameName: String) {
+        linearProgressBar.visibility= View.VISIBLE
+
+        var didEncounterError=false
+        val uploadedImageUrls= mutableListOf<String>()
+        Toast.makeText(this,"It just take a while.",Toast.LENGTH_LONG).show()
         for((index,photoUri) in imageUris.withIndex()){
             val imageByteArray=getImageByteArray(photoUri)
             val filePath="Images/$customGameName/${System.currentTimeMillis()}-${index}.jpg"
@@ -166,34 +184,51 @@ class CreateCustomGameActivity : AppCompatActivity() {
                         Log.e(TAG,"Exception with firebase",it.exception)
                         Toast.makeText(this,"Failed to upload images",Toast.LENGTH_SHORT).show()
                         didEncounterError=true
-                        createProgressBar.visibility= View.GONE
+                        linearProgressBar.visibility= View.GONE
                         return@addOnCompleteListener
                     }
                     if(didEncounterError)
                         return@addOnCompleteListener
 
+                    linearProgressBar.progress=uploadedImageUrls.size*100/imageUris.size
                     val downloadUrl=it.result.toString()
-                    uploadedImageUris.add(downloadUrl)
-                    if(uploadedImageUris.size==imageUris.size){
-                        handleAllImagesUpload(customGameName,uploadedImageUris)
+                    uploadedImageUrls.add(downloadUrl)
+                    if(uploadedImageUrls.size==imageUris.size){
+                        handleAllImagesUploaded(customGameName,uploadedImageUrls)
                     }
                 }
         }
     }
 
-    private fun handleAllImagesUpload(customGameName: String, uploadedImageUris: MutableList<String>) {
+    private fun handleAllImagesUploaded(customGameName: String, imageUrls: MutableList<String>) {
         //upload images url to firebase
-        db.collection("game").document(customGameName).set("images" to imageUris)
+        db.collection("games").document(customGameName).set(mapOf("images" to imageUrls))
             .addOnCompleteListener {
                 if(!it.isSuccessful){
                     Toast.makeText(this,"Failed game creation",Toast.LENGTH_LONG).show()
+                    linearProgressBar.visibility= View.GONE
                     return@addOnCompleteListener
                 }
-                AlertDialog.Builder(this)
-                    .setTitle("Congratulations!")
-                    .setMessage("You become a contributor to this game.\nUpload complete, let's play your game.")
+                val msg="You become a contributor to this game. People all over the world can play this game."
+                showAlertDialog("Congratulations!",msg){ _, _ ->
+                    showAlertDialog("Upload completed, let's play your game.",null){_,_ ->
+                        val resultData=Intent()
+                        resultData.putExtra(EXTRA_GAME_NAME,customGameName)
+                        setResult(Activity.RESULT_OK,resultData)
+                        finish()
+                    }
+                }
             }
-        createProgressBar.visibility= View.GONE
+        linearProgressBar.visibility= View.GONE
+    }
+
+    private fun showAlertDialog(title:String,msg:String?,listener:DialogInterface.OnClickListener?) {
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setMessage(msg)
+            .setCancelable(false)
+            .setPositiveButton("OK",listener)
+            .show()
     }
 
     @SuppressLint("LongLogTag")

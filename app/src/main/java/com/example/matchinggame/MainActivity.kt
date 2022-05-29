@@ -2,6 +2,7 @@ package com.example.matchinggame
 
 import android.animation.ArgbEvaluator
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -23,9 +24,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.matchinggame.models.BoardSize
 import com.example.matchinggame.models.MemoryCard
 import com.example.matchinggame.models.MemoryGame
+import com.example.matchinggame.models.UserImageList
 import com.example.matchinggame.utils.DEFAULT_ICONS
 import com.example.matchinggame.utils.EXTRA_BOARD_SIZE
+import com.example.matchinggame.utils.EXTRA_GAME_NAME
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
 
 @SuppressLint("SetTextI18n","ResourceAsColor")
@@ -33,6 +38,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: MemoryCardAdapter
     private lateinit var memoryGame: MemoryGame
     private var boardSize = BoardSize.EASY
+    private val db=Firebase.firestore
+    private var gameName:String?=null
+    private var customGameImages:List<String>?=null
 
     companion object{
         private const val CREATE_REQUEST_CODE=99
@@ -89,6 +97,30 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode== CREATE_REQUEST_CODE && resultCode== Activity.RESULT_OK){
+            val customGameName= data?.getStringExtra(EXTRA_GAME_NAME) ?: return
+            downloadGame(customGameName)
+        }
+    }
+
+    private fun downloadGame(customGameName: String) {
+        db.collection("games").document(customGameName).get().addOnSuccessListener {
+            //it documentSnapshot
+            val userImageList=it.toObject(UserImageList::class.java)
+            if(userImageList?.images==null){
+                Snackbar.make(parentLayout,"Sorry we couldn't found any game, '$customGameName'",Snackbar.LENGTH_SHORT)
+                return@addOnSuccessListener
+            }
+            val numCards=userImageList.images.size*2
+            boardSize=BoardSize.getByValue(numCards)
+            customGameImages=userImageList.images
+            setUpBoard()
+            gameName=customGameName
+        }
+    }
+
     @SuppressLint("InflateParams")
     private fun showNewSizeDialog() {
         val boardSizeView = LayoutInflater.from(this).inflate(R.layout.dialog_board_size,null)
@@ -106,6 +138,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.rbMedium -> BoardSize.MEDIUM
                 else -> BoardSize.HARD
             }
+            gameName=null
+            customGameImages=null
             setUpBoard()
         })
     }
@@ -121,6 +155,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpBoard() {
+            supportActionBar?.title=gameName?:getString(R.string.app_name)
         when(boardSize){
             BoardSize.EASY -> {
                 numMovesText.text="Easy: 4 x 2"
@@ -135,7 +170,7 @@ class MainActivity : AppCompatActivity() {
                 numPairsText.text="Pairs: 0 / 12"
             }
         }
-        memoryGame=MemoryGame(boardSize)
+        memoryGame=MemoryGame(boardSize, customGameImages)
 
         numPairsText.setTextColor(ContextCompat.getColor(this,R.color.color_progress_none))
 

@@ -12,6 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.matchinggame.models.BoardSize
 import com.example.matchinggame.models.MemoryCard
+import com.squareup.picasso.Picasso
 import kotlin.math.min
 
 class MemoryCardAdapter(
@@ -54,6 +55,15 @@ class MemoryCardAdapter(
 
         fun bind(position: Int) {
             val card= memoryCards[position]
+
+            if(card.isFaceUp){
+                if(card.imageUrl!=null){
+                    Picasso.get().load(card.imageUrl).into(imageBtn)
+                }else{
+                    imageBtn.setImageResource(card.identifier)
+                }
+            }else
+                imageBtn.setImageResource(R.color.theme_500)
 
             imageBtn.setImageResource( if(card.isFaceUp) card.identifier else R.color.theme_500)
 

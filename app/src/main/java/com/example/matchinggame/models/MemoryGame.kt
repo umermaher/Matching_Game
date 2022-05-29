@@ -2,16 +2,21 @@ package com.example.matchinggame.models
 
 import com.example.matchinggame.utils.DEFAULT_ICONS
 
-class MemoryGame (private val boardSize: BoardSize) {
+class MemoryGame(private val boardSize: BoardSize, private val customGameImages: List<String>?) {
     val cards : List<MemoryCard>
     var numPairsFound=0
     private var numOfCardFlips=0
     private var indexOfSingleSelectedCard: Int?=null
 
     init {
-        val chosenImages= DEFAULT_ICONS.shuffled().take(boardSize.getNumPairs())
-        val randomizedImages = (chosenImages+chosenImages).shuffled()
-        cards=randomizedImages.map { MemoryCard(it) }
+        cards = if(customGameImages==null){
+            val chosenImages= DEFAULT_ICONS.shuffled().take(boardSize.getNumPairs())
+            val randomizedImages = (chosenImages+chosenImages).shuffled()
+            randomizedImages.map { MemoryCard(it) }
+        }else{
+            val randomizedImages=(customGameImages+customGameImages).shuffled()
+            randomizedImages.map { MemoryCard(it.hashCode(),it) }
+        }
     }
     fun flipCard(position: Int) : Boolean{
         val card=cards[position]
