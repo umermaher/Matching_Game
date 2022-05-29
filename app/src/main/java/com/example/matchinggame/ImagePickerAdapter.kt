@@ -77,14 +77,12 @@ class ImagePickerAdapter(
         }
 
         override fun onMenuItemClick(p0: MenuItem?): Boolean {
-            if(onRemoveClickListener!=null){
-                val position=adapterPosition
-                if(position!=RecyclerView.NO_POSITION){
-                    when(p0?.itemId){
-                        1->{
-                            onRemoveClickListener.onRemoveClicked(position)
-                            return true
-                        }
+            val position=adapterPosition
+            if(position!=RecyclerView.NO_POSITION){
+                when(p0?.itemId){
+                    1->{
+                        onRemoveClickListener.onRemoveClicked(position)
+                        return true
                     }
                 }
             }

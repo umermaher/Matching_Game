@@ -14,10 +14,12 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
@@ -27,6 +29,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.matchinggame.models.BoardSize
 import com.example.matchinggame.utils.BitmapScaler
 import com.example.matchinggame.utils.EXTRA_BOARD_SIZE
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.activity_create_custom_game.*
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -35,11 +40,14 @@ class CreateCustomGameActivity : AppCompatActivity() {
     private lateinit var boardSize: BoardSize
     private val imageUris = mutableListOf<Uri>()
     private lateinit var adapter: ImagePickerAdapter
-
+    private val storage=Firebase.storage
+    private val db=Firebase.firestore
     companion object{
         private const val TAG="CreateCustomGameActivity"
         private const val MY_PERMISSIONS_REQUEST_GALLERY=99
         private const val PICK_PHOTO_CODE=98
+        private const val MIN_GAME_NAME_LENGTH=4
+        private const val MAX_GAME_NAME_LENGTH=14
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +67,7 @@ class CreateCustomGameActivity : AppCompatActivity() {
                 saveBtn.isEnabled=shouldEnableSaveBtn()
             }
         })
+        nameEditText.filters=arrayOf(InputFilter.LengthFilter(MAX_GAME_NAME_LENGTH))
 
         adapter=ImagePickerAdapter(this, imageUris, boardSize, createImageClickListener(), createRemoveClickListener())
         rvImagePicker.adapter=adapter
@@ -133,12 +142,61 @@ class CreateCustomGameActivity : AppCompatActivity() {
         saveBtn.isEnabled=shouldEnableSaveBtn()
     }
 
+    @SuppressLint("LongLogTag")
     private fun saveDataToFirebase() {
+        val customGameName=nameEditText.text.toString()
+        var didEncounterError=false
+        val uploadedImageUris= mutableListOf<String>()
+        createProgressBar.visibility= View.VISIBLE
+
         for((index,photoUri) in imageUris.withIndex()){
             val imageByteArray=getImageByteArray(photoUri)
+            val filePath="Images/$customGameName/${System.currentTimeMillis()}-${index}.jpg"
+
+            val photoReference = storage.reference.child(filePath)
+
+            photoReference.putBytes(imageByteArray)
+                .continueWithTask{
+                    //it -> photoUploadTask
+                    Log.i(TAG,"upload bytes: ${it.result?.bytesTransferred}")
+                    photoReference.downloadUrl
+                }.addOnCompleteListener {
+                    //it -> downloadUrlTask
+                    if(!it.isSuccessful){
+                        Log.e(TAG,"Exception with firebase",it.exception)
+                        Toast.makeText(this,"Failed to upload images",Toast.LENGTH_SHORT).show()
+                        didEncounterError=true
+                        createProgressBar.visibility= View.GONE
+                        return@addOnCompleteListener
+                    }
+                    if(didEncounterError)
+                        return@addOnCompleteListener
+
+                    val downloadUrl=it.result.toString()
+                    uploadedImageUris.add(downloadUrl)
+                    if(uploadedImageUris.size==imageUris.size){
+                        handleAllImagesUpload(customGameName,uploadedImageUris)
+                    }
+                }
         }
     }
 
+    private fun handleAllImagesUpload(customGameName: String, uploadedImageUris: MutableList<String>) {
+        //upload images url to firebase
+        db.collection("game").document(customGameName).set("images" to imageUris)
+            .addOnCompleteListener {
+                if(!it.isSuccessful){
+                    Toast.makeText(this,"Failed game creation",Toast.LENGTH_LONG).show()
+                    return@addOnCompleteListener
+                }
+                AlertDialog.Builder(this)
+                    .setTitle("Congratulations!")
+                    .setMessage("You become a contributor to this game.\nUpload complete, let's play your game.")
+            }
+        createProgressBar.visibility= View.GONE
+    }
+
+    @SuppressLint("LongLogTag")
     private fun getImageByteArray(photoUri: Uri): ByteArray {
         val originalBitmap = if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.P){
             val source=ImageDecoder.createSource(contentResolver,photoUri)
@@ -146,7 +204,9 @@ class CreateCustomGameActivity : AppCompatActivity() {
         }else{
             MediaStore.Images.Media.getBitmap(contentResolver,photoUri)
         }
-        val scaledBitmap = BitmapScaler.scaleToFitHeight(originalBitmap,250)
+        Log.i(TAG, "Original width ${originalBitmap.width} and height ${originalBitmap.height}")
+        val scaledBitmap = BitmapScaler.scaleToFitHeight(originalBitmap,200)
+        Log.i(TAG, "Scaled width ${scaledBitmap.width} and height ${scaledBitmap.height}")
         val byteOutputStream=ByteArrayOutputStream()
         scaledBitmap.compress(Bitmap.CompressFormat.JPEG,60,byteOutputStream)
 
@@ -157,7 +217,7 @@ class CreateCustomGameActivity : AppCompatActivity() {
         //Check if we should enable the save btn or not
         if(imageUris.size!=boardSize.getNumPairs())
             return false
-        if(nameEditText.text?.isBlank() == true || nameEditText.text?.length!!<3)
+        if(nameEditText.text?.isBlank() == true || nameEditText.text?.length!!< MIN_GAME_NAME_LENGTH)
             return false
         return true
     }
