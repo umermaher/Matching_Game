@@ -3,8 +3,19 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/drawable/btn_bg.xml" value="0.107" />
+        <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/drawable/ic_android.xml" value="0.16" />
+        <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/drawable/ic_boxes.xml" value="0.1" />
+        <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/drawable/ic_build.xml" value="0.16" />
+        <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/drawable/ic_download.xml" value="0.16" />
+        <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/drawable/ic_memory.xml" value="0.1" />
+        <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/drawable/ic_memory_filled.xml" value="0.1" />
         <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/layout/activity_create_custom_game.xml" value="0.18" />
+        <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/layout/activity_intro_screen.xml" value="0.18" />
         <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/layout/activity_main.xml" value="0.10460992907801418" />
+        <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/layout/memory_card.xml" value="0.1" />
+        <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/layout/pager_layout.xml" value="0.1716485507246377" />
+        <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/menu/menu_items.xml" value="0.21510416666666668" />
       </map>
     </option>
   </component>

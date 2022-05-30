@@ -1,12 +1,12 @@
-package com.example.matchinggame
+package com.example.matchinggame.adapter
 
-import android.app.ActionBar
 import android.content.Context
 import android.net.Uri
 import android.view.*
 import android.widget.ImageView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.matchinggame.R
 import com.example.matchinggame.models.BoardSize
 import kotlin.math.min
 
@@ -22,7 +22,7 @@ class ImagePickerAdapter(
         private const val MARGIN_SIZE=10
     }
 
-    override fun onCreateViewHolder(parent : ViewGroup, viewType : Int) : ImagePickerAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent : ViewGroup, viewType : Int) : ViewHolder {
         val cardWidth = parent.width / boardSize.getWidth() - (2* MARGIN_SIZE)
         val cardHeight = parent.height / boardSize.getHeight() - (2* MARGIN_SIZE)
         val cardSizeLength=min(cardWidth, cardHeight)
@@ -32,7 +32,7 @@ class ImagePickerAdapter(
 
         layoutParams.width=cardSizeLength
         layoutParams.height=cardSizeLength
-        layoutParams.setMargins(MARGIN_SIZE,MARGIN_SIZE,MARGIN_SIZE,MARGIN_SIZE)
+        layoutParams.setMargins(MARGIN_SIZE, MARGIN_SIZE, MARGIN_SIZE, MARGIN_SIZE)
         return ViewHolder(view)
     }
 

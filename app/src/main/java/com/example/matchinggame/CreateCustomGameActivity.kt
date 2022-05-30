@@ -18,15 +18,14 @@ import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.matchinggame.adapter.ImagePickerAdapter
 import com.example.matchinggame.models.BoardSize
 import com.example.matchinggame.utils.BitmapScaler
 import com.example.matchinggame.utils.EXTRA_BOARD_SIZE
@@ -35,8 +34,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.activity_create_custom_game.*
-import kotlinx.coroutines.delay
-import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
 class CreateCustomGameActivity : AppCompatActivity() {
@@ -72,7 +69,7 @@ class CreateCustomGameActivity : AppCompatActivity() {
         })
         nameEditText.filters=arrayOf(InputFilter.LengthFilter(MAX_GAME_NAME_LENGTH))
 
-        adapter=ImagePickerAdapter(this, imageUris, boardSize, createImageClickListener(), createRemoveClickListener())
+        adapter= ImagePickerAdapter(this, imageUris, boardSize, createImageClickListener(), createRemoveClickListener())
         rvImagePicker.adapter=adapter
         rvImagePicker.layoutManager=GridLayoutManager(this,boardSize.getWidth())
         rvImagePicker.setHasFixedSize(true)

@@ -1,15 +1,15 @@
-package com.example.matchinggame
+package com.example.matchinggame.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.matchinggame.R
 import com.example.matchinggame.models.BoardSize
 import com.example.matchinggame.models.MemoryCard
 import com.squareup.picasso.Picasso
@@ -36,7 +36,7 @@ class MemoryCardAdapter(
 
         layoutParams.width=cardSideLength
         layoutParams.height=cardSideLength
-        layoutParams.setMargins(MARGIN_SIZE,MARGIN_SIZE,MARGIN_SIZE,MARGIN_SIZE)
+        layoutParams.setMargins(MARGIN_SIZE, MARGIN_SIZE, MARGIN_SIZE, MARGIN_SIZE)
         return ViewHolder(view)
     }
 
@@ -65,10 +65,12 @@ class MemoryCardAdapter(
             }else
                 imageBtn.setImageResource(R.color.theme_500)
 
-            imageBtn.setImageResource( if(card.isFaceUp) card.identifier else R.color.theme_500)
+//            imageBtn.setImageResource( if(card.isFaceUp) card.identifier else R.color.theme_500)
 
             imageBtn.alpha=if(card.isMatched) .5f else 1.0f
-            val colorStateList=if(card.isMatched) ContextCompat.getColorStateList(context,R.color.gray) else null
+            val colorStateList=if(card.isMatched) ContextCompat.getColorStateList(context,
+                R.color.gray
+            ) else null
             ViewCompat.setBackgroundTintList(imageBtn,colorStateList)
 
             imageBtn.setOnClickListener {

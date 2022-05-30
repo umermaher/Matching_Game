@@ -3,7 +3,6 @@ package com.example.matchinggame
 import android.animation.ArgbEvaluator
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,23 +10,19 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.animation.Animation
-import android.view.animation.Animation.RELATIVE_TO_PARENT
-import android.view.inputmethod.EditorInfo
-import android.widget.ImageButton
 import android.widget.RadioGroup
-import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.core.view.get
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.matchinggame.adapter.MemoryCardAdapter
 import com.example.matchinggame.models.BoardSize
-import com.example.matchinggame.models.MemoryCard
 import com.example.matchinggame.models.MemoryGame
 import com.example.matchinggame.models.UserImageList
-import com.example.matchinggame.utils.DEFAULT_ICONS
 import com.example.matchinggame.utils.EXTRA_BOARD_SIZE
 import com.example.matchinggame.utils.EXTRA_GAME_NAME
+import com.example.matchinggame.viewmodel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -41,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     private val db=Firebase.firestore
     private var gameName:String?=null
     private var customGameImages:List<String>?=null
+    private val viewModel:MainViewModel by viewModels()
 
     companion object{
         private const val CREATE_REQUEST_CODE=99
@@ -48,15 +44,20 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen().apply {
+            setKeepOnScreenCondition{
+                viewModel.isLoading.value
+            }
+        }
         setContentView(R.layout.activity_main)
         setUpBoard()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_items,menu)
         //here you can change the color manually.
 //        menu?.get(0)?.icon?.setTint(ContextCompat.getColor(this,R.color.white))
-        return true
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -110,7 +111,7 @@ class MainActivity : AppCompatActivity() {
             //it documentSnapshot
             val userImageList=it.toObject(UserImageList::class.java)
             if(userImageList?.images==null){
-                Snackbar.make(parentLayout,"Sorry we couldn't found any game, '$customGameName'",Snackbar.LENGTH_SHORT)
+                Snackbar.make(parentLayout,"Sorry we couldn't found any game, '$customGameName'",Snackbar.LENGTH_SHORT).show()
                 return@addOnSuccessListener
             }
             val numCards=userImageList.images.size*2
@@ -174,7 +175,7 @@ class MainActivity : AppCompatActivity() {
 
         numPairsText.setTextColor(ContextCompat.getColor(this,R.color.color_progress_none))
 
-        adapter=MemoryCardAdapter(this, boardSize, memoryGame.cards, createCardClickListener())
+        adapter= MemoryCardAdapter(this, boardSize, memoryGame.cards, createCardClickListener())
         rvBoard.layoutManager=GridLayoutManager(this,boardSize.getWidth())
         rvBoard.adapter=adapter
         rvBoard.setHasFixedSize(true)

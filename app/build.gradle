@@ -49,9 +49,20 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
+    // Lifecycle components
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1"
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.4.1"
+    //just for viewModels()
+    implementation 'androidx.activity:activity-ktx:1.4.0'
+
     //coroutine
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.2")
+    /* coroutines support for firebase operations */
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.2'
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
 
     implementation 'com.squareup.picasso:picasso:2.8'
+
+    implementation 'androidx.core:core-splashscreen:1.0.0-beta02'
 }
