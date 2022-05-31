@@ -56,7 +56,8 @@ class DownloadGameAdapter(
                     "6 x 4"
                 }
             }
-            Picasso.get().load(model.images?.get(0)).into(gameImage)
+//            Glide.with(context).load(model.images?.get(0)).centerCrop().into(gameImage)
+            Picasso.get().load(model.images?.get(0)).placeholder(R.drawable.ic_image).into(gameImage)
         }
     }
 }

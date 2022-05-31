@@ -33,8 +33,8 @@ class IntroScreen : AppCompatActivity() {
         setContentView(R.layout.activity_intro_screen)
 
         list.add(IntroScreenItem(R.drawable.ic_memory,"Test your memory",getString(R.string.firstText)))
-        list.add(IntroScreenItem(R.drawable.ic_build,"Build your own game","Description"))
-        list.add(IntroScreenItem(R.drawable.ic_download,"Play more games","Description"))
+        list.add(IntroScreenItem(R.drawable.ic_build,"Build your own game",getString(R.string.secondText)))
+        list.add(IntroScreenItem(R.drawable.ic_download,"Play more games",getString(R.string.thirdText)))
 
         introPagerAdapter= IntroViewPagerAdapter(this,list)
         introPager.adapter=introPagerAdapter

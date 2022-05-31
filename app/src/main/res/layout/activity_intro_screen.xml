@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tabIndicator"
-        android:layout_marginHorizontal="5sp"
+        android:layout_marginHorizontal="10sp"
         app:tabIndicator="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -46,12 +46,12 @@
 
     <ImageView
         android:id="@+id/nextBtn"
-        android:layout_width="50sp"
-        android:layout_height="50sp"
+        android:layout_width="60sp"
+        android:layout_height="60sp"
         android:src="@drawable/ic_next"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-
+        android:layout_marginRight="5sp"
         app:tint="@color/theme_500"
         android:background="@drawable/next_btn_bg"
         android:padding="5sp"
@@ -68,5 +68,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/nextBtn"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="60sp"/>
+        android:layout_marginBottom="70sp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

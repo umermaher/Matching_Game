@@ -65,7 +65,8 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.2'
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
 
+    //picasso
     implementation 'com.squareup.picasso:picasso:2.8'
-
+    //SplashScreen API
     implementation 'androidx.core:core-splashscreen:1.0.0-beta02'
 }

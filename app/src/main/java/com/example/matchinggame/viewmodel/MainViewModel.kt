@@ -11,7 +11,7 @@ class MainViewModel: ViewModel() {
     val isLoading=_isLoading
     init {
         viewModelScope.launch{
-            delay(3000)
+            delay(1000)
             _isLoading.value=false
         }
     }

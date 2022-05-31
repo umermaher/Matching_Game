@@ -2,7 +2,7 @@
 <resources>
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/white</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_boxes</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_memory_splash</item>
         <item name="postSplashScreenTheme">@style/Theme.MatchingGame</item>
     </style>
 </resources>
