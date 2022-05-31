@@ -20,8 +20,8 @@
 
     <ImageView
         android:id="@+id/introImage"
-        android:layout_width="match_parent"
-        android:layout_height="222sp"
+        android:layout_width="200dp"
+        android:layout_height="200sp"
         android:src="@drawable/ic_memory"
         app:layout_constraintBottom_toTopOf="@+id/introTitle"
         app:layout_constraintEnd_toEndOf="parent"

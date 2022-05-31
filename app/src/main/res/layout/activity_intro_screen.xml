@@ -8,34 +8,65 @@
     tools:context=".IntroScreen">
 
 
+    <ProgressBar
+        android:id="@+id/introPBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="@color/theme_500"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/introPager"
         android:layout_width="0dp"
         android:layout_height="350sp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.451" />
 
     <com.google.android.material.tabs.TabLayout
-        android:layout_width="200sp"
-        android:layout_height="50sp"
+        app:tabBackground="@drawable/indicator_selector"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tabIndicator"
+        android:layout_marginHorizontal="5sp"
+        app:tabIndicator="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
     </com.google.android.material.tabs.TabLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Next"
-        android:gravity="center"
-        android:textColor="@color/theme_500"
-        android:id="@+id/nextButton"
-        android:drawablePadding="20sp"
-        android:drawableEnd="@drawable/ic_next"
-        android:drawableTint="@color/theme_500"
+    <ImageView
+        android:id="@+id/nextBtn"
+        android:layout_width="50sp"
+        android:layout_height="50sp"
+        android:src="@drawable/ic_next"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:backgroundTint="@color/white"
-        android:layout_margin="10sp"/>
+
+        app:tint="@color/theme_500"
+        android:background="@drawable/next_btn_bg"
+        android:padding="5sp"
+        />
+
+    <Button
+        android:id="@+id/playBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/theme_500"
+        android:paddingHorizontal="40sp"
+        android:text="let's play"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/nextBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="60sp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

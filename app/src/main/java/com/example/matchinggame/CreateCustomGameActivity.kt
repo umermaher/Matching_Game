@@ -27,6 +27,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.matchinggame.adapter.ImagePickerAdapter
 import com.example.matchinggame.models.BoardSize
+import com.example.matchinggame.models.UserImageList
 import com.example.matchinggame.utils.BitmapScaler
 import com.example.matchinggame.utils.EXTRA_BOARD_SIZE
 import com.example.matchinggame.utils.EXTRA_GAME_NAME
@@ -199,7 +200,8 @@ class CreateCustomGameActivity : AppCompatActivity() {
 
     private fun handleAllImagesUploaded(customGameName: String, imageUrls: MutableList<String>) {
         //upload images url to firebase
-        db.collection("games").document(customGameName).set(mapOf("images" to imageUrls))
+        val userImageList=UserImageList(customGameName, imageUrls)
+        db.collection("games").document(customGameName).set(userImageList)
             .addOnCompleteListener {
                 if(!it.isSuccessful){
                     Toast.makeText(this,"Failed game creation",Toast.LENGTH_LONG).show()
@@ -237,7 +239,7 @@ class CreateCustomGameActivity : AppCompatActivity() {
             MediaStore.Images.Media.getBitmap(contentResolver,photoUri)
         }
         Log.i(TAG, "Original width ${originalBitmap.width} and height ${originalBitmap.height}")
-        val scaledBitmap = BitmapScaler.scaleToFitHeight(originalBitmap,200)
+        val scaledBitmap = BitmapScaler.scaleToFitHeight(originalBitmap,250)
         Log.i(TAG, "Scaled width ${scaledBitmap.width} and height ${scaledBitmap.height}")
         val byteOutputStream=ByteArrayOutputStream()
         scaledBitmap.compress(Bitmap.CompressFormat.JPEG,60,byteOutputStream)

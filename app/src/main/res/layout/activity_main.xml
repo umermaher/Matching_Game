@@ -50,6 +50,7 @@
                 android:padding="8dp"
                 android:id="@+id/numMovesText"
                 android:text="Move: 0"
+                android:textSize="16sp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         </androidx.cardview.widget.CardView>
@@ -73,6 +74,7 @@
                 android:padding="8dp"
                 android:id="@+id/numPairsText"
                 android:text="Pairs: 0 / 4"
+                android:textSize="16sp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
         </androidx.cardview.widget.CardView>
 

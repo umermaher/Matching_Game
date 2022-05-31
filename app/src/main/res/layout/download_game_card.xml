@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10sp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/gameImageView"
+            android:layout_width="50sp"
+            android:layout_height="50sp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="10sp"
+            android:src="@drawable/ic_launcher_background" />
+
+        <TextView
+            android:id="@+id/gameNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Game Name"
+            android:textColor="@color/black"
+            android:layout_toEndOf="@+id/gameImageView"
+            android:layout_centerInParent="true"
+            android:textStyle="bold"
+            android:layout_marginLeft="10sp"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/gameDifText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginHorizontal="30sp"
+            android:text="4 x 2"
+            android:scaleType="fitCenter"
+
+            android:textSize="16sp" />
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

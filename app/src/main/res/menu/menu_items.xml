@@ -9,12 +9,27 @@
         android:iconTint="@color/white"
         app:showAsAction="always"/>
 
-    <item android:id="@+id/action_new_size"
-        android:title="Choose new size"
+    <item android:id="@+id/action_option"
+        android:icon="@drawable/ic_option"
         android:iconTint="@color/white"
-        app:showAsAction="never"/>
-    <item android:id="@+id/action_custom_game"
-        android:title="Create custom game"
-        android:iconTint="@color/white"
-        app:showAsAction="never"/>
+        android:title="Option"
+        app:showAsAction="ifRoom">
+    <menu>
+        <item android:id="@+id/action_new_size"
+            android:title="Choose new size"
+            android:icon="@drawable/ic_size"
+            android:iconTint="@color/white"
+            app:showAsAction="never"/>
+        <item android:id="@+id/action_custom_game"
+            android:title="Create custom game"
+            android:icon="@drawable/ic_build"
+            android:iconTint="@color/white"
+            app:showAsAction="never"/>
+        <item android:id="@+id/action_download_game"
+            android:title="Download game"
+            android:icon="@drawable/ic_download"
+            android:iconTint="@color/white"
+            app:showAsAction="never"/>
+    </menu>
+    </item>
 </menu>

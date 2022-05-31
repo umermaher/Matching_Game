@@ -4,6 +4,7 @@ import android.animation.ArgbEvaluator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,10 +12,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.RadioGroup
+import android.window.SplashScreen
+import android.window.SplashScreenView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.splashscreen.SplashScreenViewProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.matchinggame.adapter.MemoryCardAdapter
 import com.example.matchinggame.models.BoardSize
@@ -22,6 +26,7 @@ import com.example.matchinggame.models.MemoryGame
 import com.example.matchinggame.models.UserImageList
 import com.example.matchinggame.utils.EXTRA_BOARD_SIZE
 import com.example.matchinggame.utils.EXTRA_GAME_NAME
+import com.example.matchinggame.utils.PrefsData
 import com.example.matchinggame.viewmodel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.ktx.firestore
@@ -39,7 +44,9 @@ class MainActivity : AppCompatActivity() {
     private val viewModel:MainViewModel by viewModels()
 
     companion object{
+        // these are for activity results
         private const val CREATE_REQUEST_CODE=99
+        private const val DOWNLOAD_REQUEST_CODE=98
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +56,12 @@ class MainActivity : AppCompatActivity() {
                 viewModel.isLoading.value
             }
         }
+
+        if(!PrefsData.restorePrefsData(this)){
+            startActivity(Intent(this,IntroScreen::class.java))
+            finish()
+        }
+
         setContentView(R.layout.activity_main)
         setUpBoard()
     }
@@ -77,6 +90,10 @@ class MainActivity : AppCompatActivity() {
             R.id.action_custom_game -> {
                 showCreationDialog()
             }
+            R.id.action_download_game -> {
+                startActivityForResult(Intent(this,DownloadGameActivity::class.java),
+                    DOWNLOAD_REQUEST_CODE)
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -99,11 +116,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
         if(requestCode== CREATE_REQUEST_CODE && resultCode== Activity.RESULT_OK){
             val customGameName= data?.getStringExtra(EXTRA_GAME_NAME) ?: return
             downloadGame(customGameName)
         }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun downloadGame(customGameName: String) {
@@ -117,8 +134,8 @@ class MainActivity : AppCompatActivity() {
             val numCards=userImageList.images.size*2
             boardSize=BoardSize.getByValue(numCards)
             customGameImages=userImageList.images
-            setUpBoard()
             gameName=customGameName
+            setUpBoard()
         }
     }
 

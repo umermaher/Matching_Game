@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Matching Game</string>
+    <string name="firstText">Play Matching game with different difficulty levels to test your memory. You can change difficulty levels(Easy, Medium, Hard) by changing size of the board.</string>
+    <string name="secondText"></string>
 </resources>
