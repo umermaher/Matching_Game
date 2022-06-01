@@ -8,6 +8,7 @@ import android.widget.ImageButton
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.setPadding
 import androidx.recyclerview.widget.RecyclerView
 import com.example.matchinggame.R
 import com.example.matchinggame.models.BoardSize
@@ -27,15 +28,13 @@ class MemoryCardAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val cardWidth=parent.width / boardSize.getWidth() - (2 * MARGIN_SIZE)
-        val cardHeight=parent.height / boardSize.getHeight() - (2 * MARGIN_SIZE)
-        val cardSideLength=min(cardWidth,cardHeight)
-
-        val view=LayoutInflater.from(context).inflate(R.layout.memory_card,parent,false)
-        val layoutParams=view.findViewById<CardView>(R.id.cardView).layoutParams as ViewGroup.MarginLayoutParams
-
-        layoutParams.width=cardSideLength
-        layoutParams.height=cardSideLength
+        val cardWidth = parent.width / boardSize.getWidth() - 2 * MARGIN_SIZE
+        val cardHeight = parent.height / boardSize.getHeight() - 2 * MARGIN_SIZE
+        val cardSideLength = min(cardWidth, cardHeight)
+        val view = LayoutInflater.from(context).inflate(R.layout.memory_card, parent, false)
+        val layoutParams = view.findViewById<CardView>(R.id.cardView).layoutParams as ViewGroup.MarginLayoutParams
+        layoutParams.width = cardSideLength
+        layoutParams.height = cardSideLength
         layoutParams.setMargins(MARGIN_SIZE, MARGIN_SIZE, MARGIN_SIZE, MARGIN_SIZE)
         return ViewHolder(view)
     }
@@ -44,7 +43,7 @@ class MemoryCardAdapter(
         holder.bind(position)
     }
 
-    override fun getItemCount(): Int = boardSize.numCards
+    override fun getItemCount() : Int = boardSize.numCards
 
     interface OnCardClickListener{
         fun onCardClicked(position: Int)
@@ -60,6 +59,9 @@ class MemoryCardAdapter(
                 if(card.imageUrl!=null){
                     Picasso.get().load(card.imageUrl).into(imageBtn)
                 }else{
+                    if(card.identifier==R.drawable.ic_apple){
+                        imageBtn.setPadding(30)
+                    }
                     imageBtn.setImageResource(card.identifier)
                 }
             }else

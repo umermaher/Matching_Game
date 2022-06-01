@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "916513788027",
+    "project_id": "matching-game-97468",
+    "storage_bucket": "matching-game-97468.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:916513788027:android:f63e538fe9ce7a6c04d2de",
+        "android_client_info": {
+          "package_name": "com.example.matchinggame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "916513788027-aajndfmmge5f87ur4qc3ltehesm87293.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.matchinggame",
+            "certificate_hash": "d73661e4570b1cb63847058381b793b83f554f46"
+          }
+        },
+        {
+          "client_id": "916513788027-h3naubrcjd2vnb0rtqtn0el0o84jj4fh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDrzeidSfaPJ1VM0ssMWE_engJzAtUepY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "916513788027-h3naubrcjd2vnb0rtqtn0el0o84jj4fh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

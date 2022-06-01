@@ -59,11 +59,14 @@ class DownloadGameActivity : AppCompatActivity() {
             if(error!=null) return@EventListener
 
             for(dc in value!!.documentChanges){
+
                 if(dc.type==DocumentChange.Type.ADDED){
+
                     val userImageList=dc.document.toObject(UserImageList::class.java)
                     Picasso.get().load(userImageList.images?.get(0)).fetch()
                     (userImageLists as ArrayList<UserImageList>).add(userImageList)
                     gameAdapter.notifyDataSetChanged()
+
                 }
             }
         })

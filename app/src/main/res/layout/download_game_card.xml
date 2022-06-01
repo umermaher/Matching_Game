@@ -2,11 +2,13 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:elevation="20sp"
     android:layout_margin="10sp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/rv_item_bg">
         <ImageView
             android:id="@+id/gameImageView"
             android:layout_width="50sp"
@@ -36,9 +38,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginHorizontal="30sp"
-            android:text="4 x 2"
+            android:text="Easy"
             android:scaleType="fitCenter"
-
-            android:textSize="16sp" />
+            android:textSize="15sp" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

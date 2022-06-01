@@ -11,19 +11,22 @@
         <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/drawable/ic_memory.xml" value="0.1" />
         <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/drawable/ic_memory_filled.xml" value="0.1" />
         <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/drawable/ic_memory_splash.xml" value="0.137" />
+        <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/drawable/ic_music.xml" value="0.1" />
+        <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/drawable/ic_music_off.xml" value="0.18" />
         <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/drawable/ic_next.xml" value="0.1" />
         <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/drawable/ic_size.xml" value="0.1" />
         <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/drawable/indicator_selector.xml" value="0.1225" />
         <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/drawable/next_btn_bg.xml" value="0.1" />
+        <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/drawable/rv_item_bg.xml" value="0.1135" />
         <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/drawable/tab.xml" value="0.1225" />
         <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/drawable/tab_indicator_default.xml" value="0.1225" />
         <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/layout/activity_create_custom_game.xml" value="0.18" />
         <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/layout/activity_download_game.xml" value="0.19701086956521738" />
         <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/layout/activity_intro_screen.xml" value="0.18" />
-        <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/layout/activity_main.xml" value="0.18" />
-        <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/layout/download_game_card.xml" value="0.19701086956521738" />
+        <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/layout/download_game_card.xml" value="0.25" />
         <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/layout/image_card.xml" value="0.19701086956521738" />
-        <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/layout/memory_card.xml" value="0.33" />
+        <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/layout/memory_card.xml" value="0.22" />
         <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/layout/pager_layout.xml" value="0.1716485507246377" />
         <entry key="..\:/Users/umerm/AndroidStudioProjects/MatchingGame/app/src/main/res/menu/menu_items.xml" value="0.21510416666666668" />
       </map>

@@ -14,7 +14,7 @@
         android:theme="@style/Theme.MatchingGame">
         <activity
             android:name=".DownloadGameActivity"
-            android:exported="false" />
+            android:exported="false" android:screenOrientation="portrait"/>
         <activity android:name=".IntroScreen" android:screenOrientation="portrait" />
         <activity android:name=".CreateCustomGameActivity" android:screenOrientation="portrait" />
         <activity
@@ -28,6 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name=".SoundService"/>
     </application>
 
 </manifest>

@@ -4,9 +4,11 @@ import android.animation.ArgbEvaluator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -20,6 +22,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.splashscreen.SplashScreenViewProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.matchinggame.adapter.MemoryCardAdapter
 import com.example.matchinggame.models.BoardSize
@@ -29,11 +32,23 @@ import com.example.matchinggame.utils.EXTRA_BOARD_SIZE
 import com.example.matchinggame.utils.EXTRA_GAME_NAME
 import com.example.matchinggame.utils.PrefsData
 import com.example.matchinggame.viewmodel.MainViewModel
+import com.github.jinatonic.confetti.CommonConfetti
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.tasks.await
 
 @SuppressLint("SetTextI18n","ResourceAsColor")
 class MainActivity : AppCompatActivity() {
@@ -44,12 +59,18 @@ class MainActivity : AppCompatActivity() {
     private var gameName:String?=null
     private var customGameImages:List<String>?=null
     private val viewModel:MainViewModel by viewModels()
+    private lateinit var musIntent:Intent
 
     companion object{
         // these are for activity results
+        private const val TAG="MainActivity"
         private const val CREATE_REQUEST_CODE=99
         private const val DOWNLOAD_REQUEST_CODE=98
+        private const val RC_SIGN_IN = 97
     }
+
+    private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +86,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         setContentView(R.layout.activity_main)
+
+        configureGoogleSignIn()
+
+        musIntent=Intent(this,SoundService::class.java)
+        startService(musIntent)
+
         setUpBoard()
     }
 
@@ -90,25 +117,48 @@ class MainActivity : AppCompatActivity() {
                 showNewSizeDialog()
             }
             R.id.action_custom_game -> {
-                showCreationDialog()
+                val currentUser=auth.currentUser
+                if(currentUser!=null)
+                    showCreationDialog()
+                else
+                    signIn()
             }
             R.id.action_download_game -> {
                 startActivityForResult(Intent(this,DownloadGameActivity::class.java),
                     DOWNLOAD_REQUEST_CODE)
+            }
+            R.id.action_music ->{
+                if(item.title.equals("Mute")){
+                    stopService(musIntent)
+                    item.icon=ContextCompat.getDrawable(this,R.drawable.ic_music)
+                    item.title="Unmute"
+                }else{
+                    startService(musIntent)
+                    item.icon = ContextCompat.getDrawable(this, com.example.matchinggame.R.drawable.ic_music_off)
+                    item.title="Mute"
+                }
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if((requestCode== CREATE_REQUEST_CODE || requestCode== DOWNLOAD_REQUEST_CODE) && resultCode== Activity.RESULT_OK){
-            val customGameName= data?.getStringExtra(EXTRA_GAME_NAME) ?: return
-            downloadGame(customGameName)
+        if(resultCode== Activity.RESULT_OK) {
+            if (requestCode == CREATE_REQUEST_CODE || requestCode == DOWNLOAD_REQUEST_CODE) {
+                val customGameName = data?.getStringExtra(EXTRA_GAME_NAME) ?: return
+                downloadGame(customGameName)
+            }
+            //when creating game user need to sign in for authentication
+            if (requestCode == RC_SIGN_IN) {
+                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+                handleSignInTask(task)
+            }
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun downloadGame(customGameName: String) {
+        mainProgressBar.visibility = View.VISIBLE
         db.collection("games").document(customGameName).get().addOnSuccessListener {
             //it documentSnapshot
             val userImageList=it.toObject(UserImageList::class.java)
@@ -124,15 +174,69 @@ class MainActivity : AppCompatActivity() {
             customGameImages=userImageList.images
             gameName=customGameName
 
-            mainPB.visibility=View.VISIBLE
             for(imageUrl in userImageList.images){
                 Picasso.get().load(imageUrl).fetch()
             }
-            Toast.makeText(this,"You're now playing $customGameName!",Toast.LENGTH_LONG).show()
-            mainPB.visibility=View.GONE
+
+            Toast.makeText(this,"Just a second!",Toast.LENGTH_SHORT).show()
             setUpBoard()
+
+            lifecycleScope.launch {
+                timeForLoad()
+            }
+        }.addOnFailureListener {
+            Toast.makeText(this,"Failed to download!",Toast.LENGTH_LONG).show()
+            mainProgressBar.visibility=View.GONE
         }
     }
+
+    //sometimes images load very slow due to network connection
+    private suspend fun timeForLoad(){
+        delay(2000)
+        mainProgressBar.visibility = View.GONE
+        Toast.makeText(this@MainActivity,"You're now playing $gameName!",Toast.LENGTH_LONG).show()
+    }
+
+    //for custom game user need to sign in
+    private fun configureGoogleSignIn() {
+        //configure google sign in
+        val gso= GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.your_web_client_id))
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(this,gso)
+        auth= Firebase.auth
+    }
+
+    private fun signIn() {
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
+
+    private fun handleSignInTask(completedTask: Task<GoogleSignInAccount>) {
+        try {
+            val account = completedTask.getResult(ApiException::class.java)!!
+            Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
+            firebaseAuthWithGoogle(account.idToken!!)
+        } catch (e: ApiException) {
+            Log.w(TAG, "signInResult:failed code=" + e.statusCode)
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        mainProgressBar.visibility = View.VISIBLE
+        GlobalScope.launch(Dispatchers.IO) {
+            val auth = auth.signInWithCredential(credential).await()
+//            val firebaseUser = auth.user
+            withContext(Dispatchers.Main) {
+                mainProgressBar.visibility = View.GONE
+                showCreationDialog()
+            }
+        }
+    }
+
 
     private fun showCreationDialog() {
         val boardSizeView = LayoutInflater.from(this).inflate(R.layout.dialog_board_size,null)
@@ -191,7 +295,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpBoard() {
-            supportActionBar?.title=gameName?:getString(R.string.app_name)
+        supportActionBar?.title=gameName?:getString(R.string.app_name)
+
+        bestText.text="${PrefsData.getBest(this,boardSize)} moves"
+
         when(boardSize){
             BoardSize.EASY -> {
                 numMovesText.text="Easy: 4 x 2"
@@ -236,19 +343,41 @@ class MainActivity : AppCompatActivity() {
                 return
             }
             if(memoryGame.flipCard(position)){
+                //Color will change from red to green
                 val color = ArgbEvaluator().evaluate(
                     memoryGame.numPairsFound.toFloat() / boardSize.getNumPairs().toFloat(),
                     ContextCompat.getColor(this@MainActivity,R.color.color_progress_none),
                     ContextCompat.getColor(this@MainActivity,R.color.color_progress_full)
                 ) as Int
+
                 numPairsText.setTextColor(color)
                 numPairsText.text="Pairs : ${memoryGame.numPairsFound} / ${boardSize.getNumPairs()}"
                 if(memoryGame.haveWonGame()) {
                     Snackbar.make(parentLayout, "You won!", Snackbar.LENGTH_LONG).show()
+                    CommonConfetti.rainingConfetti(parentLayout, intArrayOf(Color.YELLOW,Color.BLUE,Color.RED,Color.GREEN,Color.MAGENTA)).oneShot()
+
+                    if(PrefsData.isFirstTime(this@MainActivity,boardSize)){
+                        bestText.text="Best: ${memoryGame.getNumMoves()} moves"
+                        setBest()
+                        PrefsData.notFirstTime(this@MainActivity,boardSize)
+                    }
+
+                    //storing best record if current game has best score
+                    if(PrefsData.getBest(this@MainActivity,boardSize) > memoryGame.getNumMoves()){
+                        bestText.text="Best: ${memoryGame.getNumMoves()} moves"
+                        setBest()
+                    }
                 }
             }
             numMovesText.text="Moves: ${memoryGame.getNumMoves()}"
             adapter.notifyDataSetChanged()
         }
+    }
+
+    private fun setBest()=PrefsData.setBest(this@MainActivity,boardSize,memoryGame.getNumMoves())
+
+    override fun onDestroy() {
+        stopService(musIntent)
+        super.onDestroy()
     }
 }

@@ -30,6 +30,11 @@
             android:icon="@drawable/ic_download"
             android:iconTint="@color/white"
             app:showAsAction="never"/>
+        <item android:id="@+id/action_music"
+            android:title="Mute"
+            android:icon="@drawable/ic_music_off"
+            android:iconTint="@color/white"
+            app:showAsAction="never"/>
     </menu>
     </item>
 </menu>

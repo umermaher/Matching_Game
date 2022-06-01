@@ -3,4 +3,5 @@
     <string name="firstText">Play Matching game with different difficulty levels to test your memory. You can change difficulty levels(Easy, Medium, Hard) by changing size of the board.</string>
     <string name="secondText">Customize your own game with selected difficulty level and become a contributor of this game. Select images from your phone, be sure you choose a relevant image collection and name as well.</string>
     <string name="thirdText">Download the games created by others, well others can also play your custom games.</string>
+    <string name="your_web_client_id">916513788027-h3naubrcjd2vnb0rtqtn0el0o84jj4fh.apps.googleusercontent.com</string>
 </resources>

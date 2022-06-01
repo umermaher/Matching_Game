@@ -50,10 +50,10 @@ class DownloadGameAdapter(
             val model=userImageLists[position]
             gameName.text=model.name
             gameDif.text = when(model.images?.size){
-                4 -> "4 x 2"
-                9 -> "6 x 3"
+                4 -> "EASY"
+                9 -> "MEDIUM"
                 else -> {
-                    "6 x 4"
+                    "HARD"
                 }
             }
 //            Glide.with(context).load(model.images?.get(0)).centerCrop().into(gameImage)

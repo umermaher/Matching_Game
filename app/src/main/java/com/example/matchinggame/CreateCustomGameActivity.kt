@@ -31,6 +31,7 @@ import com.example.matchinggame.models.UserImageList
 import com.example.matchinggame.utils.BitmapScaler
 import com.example.matchinggame.utils.EXTRA_BOARD_SIZE
 import com.example.matchinggame.utils.EXTRA_GAME_NAME
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -43,6 +44,7 @@ class CreateCustomGameActivity : AppCompatActivity() {
     private lateinit var adapter: ImagePickerAdapter
     private val storage=Firebase.storage
     private val db=Firebase.firestore
+    private val auth=Firebase.auth
     companion object{
         private const val TAG="CreateCustomGameActivity"
         private const val MY_PERMISSIONS_REQUEST_GALLERY=99
@@ -200,7 +202,7 @@ class CreateCustomGameActivity : AppCompatActivity() {
 
     private fun handleAllImagesUploaded(customGameName: String, imageUrls: MutableList<String>) {
         //upload images url to firebase
-        val userImageList=UserImageList(customGameName, imageUrls)
+        val userImageList=UserImageList(customGameName, imageUrls,auth.currentUser?.email)
         db.collection("games").document(customGameName).set(userImageList)
             .addOnCompleteListener {
                 if(!it.isSuccessful){
