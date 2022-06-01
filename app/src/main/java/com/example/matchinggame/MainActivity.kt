@@ -357,14 +357,14 @@ class MainActivity : AppCompatActivity() {
                     CommonConfetti.rainingConfetti(parentLayout, intArrayOf(Color.YELLOW,Color.BLUE,Color.RED,Color.GREEN,Color.MAGENTA)).oneShot()
 
                     if(PrefsData.isFirstTime(this@MainActivity,boardSize)){
-                        bestText.text="Best: ${memoryGame.getNumMoves()} moves"
+                        bestText.text="${memoryGame.getNumMoves()} moves"
                         setBest()
                         PrefsData.notFirstTime(this@MainActivity,boardSize)
                     }
 
                     //storing best record if current game has best score
                     if(PrefsData.getBest(this@MainActivity,boardSize) > memoryGame.getNumMoves()){
-                        bestText.text="Best: ${memoryGame.getNumMoves()} moves"
+                        bestText.text="${memoryGame.getNumMoves()} moves"
                         setBest()
                     }
                 }
