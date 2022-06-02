@@ -90,7 +90,9 @@ class MainActivity : AppCompatActivity() {
         configureGoogleSignIn()
 
         musIntent=Intent(this,SoundService::class.java)
-        startService(musIntent)
+        if(PrefsData.restorePrefsData(this)){
+            startService(musIntent)
+        }
 
         setUpBoard()
     }

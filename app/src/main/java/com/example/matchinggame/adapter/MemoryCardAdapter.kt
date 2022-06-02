@@ -60,13 +60,14 @@ class MemoryCardAdapter(
                     Picasso.get().load(card.imageUrl).into(imageBtn)
                 }else{
                     if(card.identifier==R.drawable.ic_apple){
-                        imageBtn.setPadding(30)
+                        imageBtn.setPadding(50)
                     }
                     imageBtn.setImageResource(card.identifier)
                 }
-            }else
+            }else {
+                imageBtn.setPadding(0)
                 imageBtn.setImageResource(R.color.theme_500)
-
+            }
 //            imageBtn.setImageResource( if(card.isFaceUp) card.identifier else R.color.theme_500)
 
             imageBtn.alpha=if(card.isMatched) .5f else 1.0f

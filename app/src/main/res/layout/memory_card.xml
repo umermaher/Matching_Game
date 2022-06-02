@@ -10,7 +10,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="120dp"
         android:layout_height="120dp"
-        app:cardElevation="0dp"
+        app:cardElevation="1dp"
         app:cardCornerRadius="15dp"
         app:cardPreventCornerOverlap="true"
         android:id="@+id/cardView">
@@ -19,8 +19,7 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:id="@+id/imageBtn"
-            android:src="@drawable/ic_apple"
-
+            android:src="@drawable/ic_launcher_background"
             android:background="@color/white"
             />
     </androidx.cardview.widget.CardView>

@@ -26,7 +26,7 @@
             android:iconTint="@color/white"
             app:showAsAction="never"/>
         <item android:id="@+id/action_download_game"
-            android:title="Download game"
+            android:title="Download games"
             android:icon="@drawable/ic_download"
             android:iconTint="@color/white"
             app:showAsAction="never"/>
