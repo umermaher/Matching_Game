@@ -220,7 +220,7 @@ class CreateCustomGameActivity : AppCompatActivity() {
                     }
                 }
             }
-        linearProgressBar.visibility= View.GONE
+        linearProgressBar.visibility = View.GONE
     }
 
     private fun showAlertDialog(title:String,msg:String?,listener:DialogInterface.OnClickListener?) {
