@@ -17,10 +17,9 @@ import kotlinx.android.synthetic.main.download_game_card.view.*
 
 class DownloadGameAdapter(
     private val context: Context,
-    private val userImageLists: List<UserImageList>,
     private val onItemClick: OnItemClick) :
     RecyclerView.Adapter<DownloadGameAdapter.ViewHolder>() {
-
+    private val userImageLists= ArrayList<UserImageList>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view=LayoutInflater.from(context).inflate(R.layout.download_game_card,parent,false)
         return ViewHolder(view)
@@ -32,8 +31,14 @@ class DownloadGameAdapter(
 
     override fun getItemCount(): Int = userImageLists.size
 
+    fun updateList(newList:List<UserImageList>){
+        userImageLists.clear()
+        userImageLists.addAll(newList)
+        notifyDataSetChanged()
+    }
+
     interface OnItemClick{
-        fun onItemClicked(position: Int)
+        fun onItemClicked(userImageList: UserImageList)
     }
 
     inner class ViewHolder(itemView:View):RecyclerView.ViewHolder(itemView){
@@ -42,7 +47,7 @@ class DownloadGameAdapter(
         private var gameDif:TextView=itemView.findViewById(R.id.gameDifText)
         init {
             itemView.setOnClickListener {
-                onItemClick.onItemClicked(adapterPosition)
+                onItemClick.onItemClicked(userImageLists[adapterPosition])
             }
         }
 
