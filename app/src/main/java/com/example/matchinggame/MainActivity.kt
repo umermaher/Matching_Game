@@ -31,6 +31,7 @@ import com.example.matchinggame.models.UserImageList
 import com.example.matchinggame.utils.EXTRA_BOARD_SIZE
 import com.example.matchinggame.utils.EXTRA_GAME_NAME
 import com.example.matchinggame.utils.PrefsData
+import com.example.matchinggame.viewmodel.GameViewModel
 import com.example.matchinggame.viewmodel.MainViewModel
 import com.github.jinatonic.confetti.CommonConfetti
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -194,7 +195,7 @@ class MainActivity : AppCompatActivity() {
 
     //sometimes images load very slow due to network connection
     private suspend fun timeForLoad(){
-        delay(2000)
+        delay(3000)
         mainProgressBar.visibility = View.GONE
         Toast.makeText(this@MainActivity,"You're now playing $gameName!",Toast.LENGTH_LONG).show()
     }
@@ -226,6 +227,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         mainProgressBar.visibility = View.VISIBLE

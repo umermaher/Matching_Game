@@ -34,4 +34,15 @@ class GameRepository {
             liveData.postValue(userImageLists)
         })
     }
+//    fun addGameToFirestore(liveData:MutableLiveData<Boolean>,gameName: String, model: UserImageList){
+//        db.collection("games").document(gameName).set(model)
+//            .addOnCompleteListener {
+//                if (!it.isSuccessful) {
+//                    liveData.postValue(false)
+//                    return@addOnCompleteListener
+//                }
+//                liveData.postValue(true)
+//            }
+//    }
+
 }

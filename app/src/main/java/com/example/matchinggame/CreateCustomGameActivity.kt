@@ -21,6 +21,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -31,6 +32,7 @@ import com.example.matchinggame.models.UserImageList
 import com.example.matchinggame.utils.BitmapScaler
 import com.example.matchinggame.utils.EXTRA_BOARD_SIZE
 import com.example.matchinggame.utils.EXTRA_GAME_NAME
+import com.example.matchinggame.viewmodel.GameViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -221,6 +223,11 @@ class CreateCustomGameActivity : AppCompatActivity() {
                 }
             }
         linearProgressBar.visibility = View.GONE
+//        val gameViewModel: GameViewModel by viewModels()
+//        gameViewModel.addGame(customGameName,userImageList)
+//        gameViewModel.doneUpload.observe(this){
+//            Toast.makeText(this@CreateCustomGameActivity,it.toString(),Toast.LENGTH_LONG).show()
+//        }
     }
 
     private fun showAlertDialog(title:String,msg:String?,listener:DialogInterface.OnClickListener?) {
