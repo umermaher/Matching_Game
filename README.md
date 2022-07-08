@@ -1,5 +1,6 @@
 # Matching_Game
-This project is inspired from Rahul's MyMemory game, I Re-Engineered it with some other features. This basically a matching game in which gamer has to memorize and match pair of cards with a single move.
+This project is inspired from Rahul's MyMemory game, I Re-Engineered it with some other features. This basically a matching game in which gamer has to memorize and match pair of cards with a single move. 
+# Made with ❤️
 * Users can play this game with three(easy, medium and hard with board size 4x2,6x3 and 6x4 respectively) difficulty levels.
 * Background music can be turned on and off.
 * Users can create custom games with their images to play, but first they have sign in with google just for user authentication. In plus, other users can also play this game
